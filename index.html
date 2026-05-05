@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartPrice Pro - 2026</title>
+    <style>
+        :root {
+            --primary: #6B46D1;
+            --primary-light: #F4F0FF;
+            --primary-dark: #5535A6;
+            --white: #FFFFFF;
+            --gray-bg: #F8F9FA;
+            --text-main: #2D2D2D;
+            --text-sec: #9E9E9E;
+            --border: #E0E0E0;
+            --error: #FF4D4D;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #D1D1D1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: var(--white);
+            border-radius: 45px;
+            position: relative;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 10px solid #222;
+        }
+
+        .view {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+            flex-direction: column;
+            padding: 25px;
+            background: white;
+            z-index: 5;
+        }
+
+        .view.active {
+            display: flex;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .global-lang-bar {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            z-index: 100;
+        }
+
+        .lang-btn {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-sec);
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .lang-btn.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .circle-btn {
+            width: 38px;
+            height: 38px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            position: absolute;
+            left: 0;
+        }
+
+        .logo-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo-area h1 {
+            color: var(--primary);
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .main-illustration {
+            width: 200px;
+            margin-top: 30px;
+        }
+
+        .input-group {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .btn-filled {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .btn-outline {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .store-selector {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 15px;
+        }
+
+        .store-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            color: var(--text-sec);
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .store-tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 15px;
+            border: 1.5px solid var(--border);
+            background: #F9F9F9;
+            outline: none;
+        }
+
+        .scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .scroll-area::-webkit-scrollbar { width: 4px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+        .item-card {
+            margin-bottom: 25px;
+        }
+
+        .item-header {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .price-grid {
+            display: flex;
+            gap: 10px;
+        }
+
+        .price-col {
+            flex: 1;
+            text-align: center;
+        }
+
+        .label-country {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .price-tag {
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 10px 2px;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        .footer-spacer {
+            padding-top: 15px;
+            margin-top: auto;
+        }
+
+        .error-hint {
+            color: var(--error);
+            font-size: 12px;
+            text-align: center;
+            margin-bottom: 10px;
+            display: none;
+            font-weight: 600;
+        }
+        
+        #reg-suggestion {
+            display: none;
+            margin-top: 10px;
+            text-align: center;
+            color: var(--primary);
+            font-weight: bold;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-frame">
+        
+        <div id="view-welcome" class="view active">
+            <div class="global-lang-bar">
+                <div class="lang-btn" onclick="changeLanguage('RU')">RU</div>
+                <div class="lang-btn" onclick="changeLanguage('LV')">LV</div>
+                <div class="lang-btn active" onclick="changeLanguage('EN')">EN</div>
+                <div class="lang-btn" onclick="changeLanguage('EE')">EE</div>
+                <div class="lang-btn" onclick="changeLanguage('LT')">LT</div>
+            </div>
+
+            <div class="logo-area">
+                <h1 data-key="welcome_title">Welcome</h1>
+                <button class="btn-filled" onclick="showView('view-login')" data-key="login_btn">Log in</button>
+                <button class="btn-outline" onclick="showView('view-register')" data-key="signup_btn">Sign up</button>
+                <img src="https://cdn-icons-png.flaticon.com/512/3081/3081840.png" class="main-illustration">
+            </div>
+        </div>
+
+        <div id="view-login" class="view">
+            <div class="global-lang-bar">
+                <div class="lang-btn" onclick="changeLanguage('RU')">RU</div>
+                <div class="lang-btn" onclick="changeLanguage('LV')">LV</div>
+                <div class="lang-btn" onclick="changeLanguage('EN')">EN</div>
+                <div class="lang-btn" onclick="changeLanguage('EE')">EE</div>
+                <div class="lang-btn" onclick="changeLanguage('LT')">LT</div>
+            </div>
+
+            <div class="header">
+                <div class="circle-btn" onclick="showView('view-welcome')">←</div>
+                <div style="font-weight: 800; color: var(--primary);" data-key="login_btn">Log in</div>
+            </div>
+
+            <div class="logo-area" style="flex:0; margin-top:20px;">
+                <div id="auth-error" class="error-hint" data-key="error_auth">Account not found</div>
+                <div class="input-group">
+                    <input type="text" id="login-user" class="custom-input" placeholder="User name" data-placeholder="ph_user">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="login-pass" class="custom-input" placeholder="Password" data-placeholder="ph_pass">
+                </div>
+                <button class="btn-filled" onclick="tryLogin()" data-key="enter_btn">Enter</button>
+                <div id="reg-suggestion" onclick="showView('view-register')" data-key="suggest_reg">Don't have an account? Create one</div>
+            </div>
+        </div>
+
+        <div id="view-register" class="view">
+            <div class="global-lang-bar">
+                <div class="lang-btn" onclick="changeLanguage('RU')">RU</div>
+                <div class="lang-btn" onclick="changeLanguage('LV')">LV</div>
+                <div class="lang-btn" onclick="changeLanguage('EN')">EN</div>
+                <div class="lang-btn" onclick="changeLanguage('EE')">EE</div>
+                <div class="lang-btn" onclick="changeLanguage('LT')">LT</div>
+            </div>
+
+            <div class="header">
+                <div class="circle-btn" onclick="showView('view-welcome')">←</div>
+                <div style="font-weight: 800; color: var(--primary);" data-key="signup_btn">Sign up</div>
+            </div>
+
+            <div class="logo-area" style="flex:0; margin-top:20px;">
+                <div class="input-group">
+                    <input type="text" id="reg-user" class="custom-input" placeholder="User name" data-placeholder="ph_user">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="reg-pass" class="custom-input" placeholder="Password" data-placeholder="ph_pass">
+                </div>
+                <button class="btn-filled" onclick="tryRegister()" data-key="create_btn">Create Account</button>
+            </div>
+        </div>
+
+        <div id="view-main" class="view">
+            <div class="global-lang-bar">
+                <div class="lang-btn" onclick="changeLanguage('RU')">RU</div>
+                <div class="lang-btn" onclick="changeLanguage('LV')">LV</div>
+                <div class="lang-btn" onclick="changeLanguage('EN')">EN</div>
+                <div class="lang-btn" onclick="changeLanguage('EE')">EE</div>
+                <div class="lang-btn" onclick="changeLanguage('LT')">LT</div>
+            </div>
+
+            <div class="header">
+                <div style="font-weight: 900; color: var(--primary); font-size: 22px;">SmartPrice</div>
+            </div>
+
+            <div class="store-selector">
+                <div class="store-tab active" onclick="switchStore('MAXIMA', this)">MAXIMA</div>
+                <div class="store-tab" onclick="switchStore('RIMI', this)">RIMI</div>
+                <div class="store-tab" onclick="switchStore('LIDL', this)">LIDL</div>
+            </div>
+
+            <div class="search-container">
+                <input type="text" id="catalog-search" placeholder="Search product..." data-placeholder="ph_search" oninput="renderItems()">
+            </div>
+
+            <div class="scroll-area" id="items-list"></div>
+
+            <div class="footer-spacer">
+                <button class="btn-filled" style="background:#8b66e5" onclick="userLogout()" data-key="logout_btn">Log out</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const TRANSLATIONS = {
+            RU: {
+                welcome_title: "Добро пожаловать", login_btn: "Войти", signup_btn: "Регистрация",
+                ph_user: "Имя пользователя", ph_pass: "Пароль", enter_btn: "Войти",
+                create_btn: "Создать аккаунт", error_auth: "Аккаунт не найден",
+                suggest_reg: "Нет аккаунта? Создать новый",
+                logout_btn: "Выйти", ph_search: "Поиск товара...",
+                country_lt: "Литва", country_lv: "Латвия", country_ee: "Эстония"
+            },
+            LV: {
+                welcome_title: "Laipni lūdzam", login_btn: "Ieiet", signup_btn: "Reģistrācija",
+                ph_user: "Lietotājvārds", ph_pass: "Parole", enter_btn: "Ieiet",
+                create_btn: "Izveidot kontu", error_auth: "Konts nav atrasts",
+                suggest_reg: "Nav konta? Izveidot jaunu",
+                logout_btn: "Iziet", ph_search: "Meklēt preci...",
+                country_lt: "Lietuva", country_lv: "Latvija", country_ee: "Igaunija"
+            },
+            EN: {
+                welcome_title: "Welcome", login_btn: "Log in", signup_btn: "Sign up",
+                ph_user: "User name", ph_pass: "Password", enter_btn: "Enter",
+                create_btn: "Create Account", error_auth: "Account not found",
+                suggest_reg: "Don't have an account? Create one",
+                logout_btn: "Log out", ph_search: "Search product...",
+                country_lt: "Lithuania", country_lv: "Latvia", country_ee: "Estonia"
+            },
+            EE: {
+                welcome_title: "Tere tulemast", login_btn: "Logi sisse", signup_btn: "Registreeru",
+                ph_user: "Kasutajanimi", ph_pass: "Parool", enter_btn: "Sisene",
+                create_btn: "Loo konto", error_auth: "Kontot ei leitud",
+                suggest_reg: "Pole kontot? Loo uus",
+                logout_btn: "Logi välja", ph_search: "Otsi toodet...",
+                country_lt: "Leedu", country_lv: "Läti", country_ee: "Eesti"
+            },
+            LT: {
+                welcome_title: "Sveiki atvykę", login_btn: "Prisijungti", signup_btn: "Registracija",
+                ph_user: "Vartotojo vardas", ph_pass: "Slaptažodis", enter_btn: "Prisijungti",
+                create_btn: "Sukurti paskyrą", error_auth: "Paskyra nerasta",
+                suggest_reg: "Neturite paskyros? Sukurkite naują",
+                logout_btn: "Atsijungti", ph_search: "Ieškoti prekės...",
+                country_lt: "Lietuva", country_lv: "Latvija", country_ee: "Estija"
+            }
+        };
+
+        // Realistic Price Database based on 2024-2025 Market Trends in Baltics
+        const PRODUCT_DATABASE = [
+            { id: 1, icon: "🥛", names: {RU: "Молоко 1л", EN: "Milk 1L", LV: "Piens 1l", EE: "Piim 1l", LT: "Pienas 1l"}, prices: { MAXIMA: {lt: 0.95, lv: 1.05, ee: 1.15}, RIMI: {lt: 1.19, lv: 1.25, ee: 1.35}, LIDL: {lt: 0.79, lv: 0.85, ee: 0.89} }},
+            { id: 2, icon: "🍞", names: {RU: "Хлеб белый", EN: "White Bread", LV: "Baltmaize", EE: "Sai", LT: "Batonas"}, prices: { MAXIMA: {lt: 0.89, lv: 0.99, ee: 1.09}, RIMI: {lt: 1.15, lv: 1.29, ee: 1.39}, LIDL: {lt: 0.65, lv: 0.69, ee: 0.75} }},
+            { id: 3, icon: "🥚", names: {RU: "Яйца M x10", EN: "Eggs M x10", LV: "Olas M x10", EE: "Munad M x10", LT: "Kiaušiniai M x10"}, prices: { MAXIMA: {lt: 1.89, lv: 1.99, ee: 2.15}, RIMI: {lt: 2.35, lv: 2.49, ee: 2.65}, LIDL: {lt: 1.59, lv: 1.69, ee: 1.79} }},
+            { id: 4, icon: "🧈", names: {RU: "Масло 200г", EN: "Butter 200g", LV: "Sviests 200g", EE: "Või 200g", LT: "Sviestas 200g"}, prices: { MAXIMA: {lt: 2.39, lv: 2.45, ee: 2.69}, RIMI: {lt: 2.89, lv: 3.15, ee: 3.49}, LIDL: {lt: 1.99, lv: 2.05, ee: 2.15} }},
+            { id: 5, icon: "🍗", names: {RU: "Филе куриное 1кг", EN: "Chicken Fillet 1kg", LV: "Vistas fileja 1kg", EE: "Kanafilee 1kg", LT: "Vištienos filė 1kg"}, prices: { MAXIMA: {lt: 5.99, lv: 6.49, ee: 6.99}, RIMI: {lt: 6.89, lv: 7.29, ee: 7.79}, LIDL: {lt: 5.29, lv: 5.49, ee: 5.79} }},
+            { id: 6, icon: "🧀", names: {RU: "Сыр Гауда 200г", EN: "Gouda Cheese 200g", LV: "Gouda siers 200g", EE: "Gouda juust 200g", LT: "Gouda sūris 200g"}, prices: { MAXIMA: {lt: 2.15, lv: 2.29, ee: 2.49}, RIMI: {lt: 2.75, lv: 2.99, ee: 3.29}, LIDL: {lt: 1.89, lv: 1.95, ee: 2.05} }},
+            { id: 7, icon: "🍎", names: {RU: "Яблоки 1кг", EN: "Apples 1kg", LV: "Āboli 1kg", EE: "Õunad 1kg", LT: "Obuoliaiai 1kg"}, prices: { MAXIMA: {lt: 0.89, lv: 0.99, ee: 1.15}, RIMI: {lt: 1.35, lv: 1.49, ee: 1.69}, LIDL: {lt: 0.69, lv: 0.79, ee: 0.89} }},
+            { id: 8, icon: "🍌", names: {RU: "Бананы 1кг", EN: "Bananas 1kg", LV: "Banāni 1kg", EE: "Banaanid 1kg", LT: "Bananai 1kg"}, prices: { MAXIMA: {lt: 1.49, lv: 1.59, ee: 1.69}, RIMI: {lt: 1.79, lv: 1.89, ee: 1.99}, LIDL: {lt: 1.29, lv: 1.39, ee: 1.45} }},
+            { id: 9, icon: "🥔", names: {RU: "Картофель 1кг", EN: "Potatoes 1kg", LV: "Kartupeļi 1kg", EE: "Kartul 1kg", LT: "Bulvės 1kg"}, prices: { MAXIMA: {lt: 0.49, lv: 0.55, ee: 0.65}, RIMI: {lt: 0.79, lv: 0.85, ee: 0.95}, LIDL: {lt: 0.39, lv: 0.45, ee: 0.49} }},
+            { id: 10, icon: "☕", names: {RU: "Кофе молотый 500г", EN: "Ground Coffee 500g", LV: "Maltā kafija 500g", EE: "Jahvatatud kohv 500g", LT: "Malta kava 500g"}, prices: { MAXIMA: {lt: 6.49, lv: 6.99, ee: 7.49}, RIMI: {lt: 8.49, lv: 8.99, ee: 9.49}, LIDL: {lt: 5.49, lv: 5.89, ee: 6.29} }},
+            { id: 11, icon: "🍝", names: {RU: "Спагетти 500г", EN: "Spaghetti 500g", LV: "Spageti 500g", EE: "Spagetid 500g", LT: "Spagečiai 500g"}, prices: { MAXIMA: {lt: 0.99, lv: 1.15, ee: 1.29}, RIMI: {lt: 1.49, lv: 1.65, ee: 1.79}, LIDL: {lt: 0.79, lv: 0.89, ee: 0.95} }},
+            { id: 12, icon: "🧴", names: {RU: "Шампунь 400мл", EN: "Shampoo 400ml", LV: "Šampūns 400ml", EE: "Šampoon 400ml", LT: "Šampūnas 400ml"}, prices: { MAXIMA: {lt: 3.49, lv: 3.89, ee: 4.25}, RIMI: {lt: 4.99, lv: 5.49, ee: 5.99}, LIDL: {lt: 2.89, lv: 3.15, ee: 3.39} }},
+            { id: 13, icon: "🧻", names: {RU: "Т.Бумага 8 рул", EN: "Toilet Paper 8 rolls", LV: "Tualetes papīrs 8 ruļļi", EE: "Tualettpaber 8 rulli", LT: "Tualetinis popierius 8 rul"}, prices: { MAXIMA: {lt: 3.19, lv: 3.49, ee: 3.79}, RIMI: {lt: 4.29, lv: 4.59, ee: 4.89}, LIDL: {lt: 2.59, lv: 2.89, ee: 3.09} }},
+            { id: 14, icon: "🥤", names: {RU: "Кока-Кола 2л", EN: "Coca-Cola 2L", LV: "Coca-Cola 2l", EE: "Coca-Cola 2l", LT: "Coca-Cola 2l"}, prices: { MAXIMA: {lt: 1.99, lv: 2.15, ee: 2.39}, RIMI: {lt: 2.49, lv: 2.69, ee: 2.89}, LIDL: {lt: 1.85, lv: 1.95, ee: 2.15} }},
+            { id: 15, icon: "🍫", names: {RU: "Шоколад 100г", EN: "Chocolate 100g", LV: "Šokolāde 100g", EE: "Šokolaad 100g", LT: "Šokoladas 100g"}, prices: { MAXIMA: {lt: 1.15, lv: 1.25, ee: 1.39}, RIMI: {lt: 1.65, lv: 1.75, ee: 1.89}, LIDL: {lt: 0.89, lv: 0.99, ee: 1.10} }}
+        ];
+
+        let currentLang = 'EN';
+        let currentStore = 'MAXIMA';
+
+        function changeLanguage(langCode) {
+            currentLang = langCode;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText === langCode);
+            });
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if(TRANSLATIONS[currentLang][key]) el.innerText = TRANSLATIONS[currentLang][key];
+            });
+            document.querySelectorAll('[data-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-placeholder');
+                if(TRANSLATIONS[currentLang][key]) el.placeholder = TRANSLATIONS[currentLang][key];
+            });
+            if(document.getElementById('view-main').classList.contains('active')) renderItems();
+        }
+
+        function showView(viewId) {
+            document.getElementById('auth-error').style.display = 'none';
+            document.getElementById('reg-suggestion').style.display = 'none';
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            if(viewId === 'view-main') renderItems();
+        }
+
+        if(!localStorage.getItem('user_db')) localStorage.setItem('user_db', JSON.stringify([]));
+
+        function tryRegister() {
+            const u = document.getElementById('reg-user').value.trim();
+            const p = document.getElementById('reg-pass').value.trim();
+            if(!u || !p) return alert("Fill fields!");
+            let db = JSON.parse(localStorage.getItem('user_db'));
+            if(db.find(x => x.user === u)) return alert("User exists!");
+            db.push({user: u, pass: p});
+            localStorage.setItem('user_db', JSON.stringify(db));
+            alert("Success! Log in now.");
+            showView('view-login');
+        }
+
+        function tryLogin() {
+            const u = document.getElementById('login-user').value.trim();
+            const p = document.getElementById('login-pass').value.trim();
+            const err = document.getElementById('auth-error');
+            const sug = document.getElementById('reg-suggestion');
+            let db = JSON.parse(localStorage.getItem('user_db'));
+            
+            if(db.find(x => x.user === u && x.pass === p)) {
+                err.style.display = 'none';
+                sug.style.display = 'none';
+                sessionStorage.setItem('is_logged', 'true');
+                showView('view-main');
+            } else {
+                err.style.display = 'block';
+                sug.style.display = 'block';
+            }
+        }
+
+        function userLogout() {
+            sessionStorage.removeItem('is_logged');
+            showView('view-welcome');
+        }
+
+        function switchStore(sName, el) {
+            currentStore = sName;
+            document.querySelectorAll('.store-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            renderItems();
+        }
+
+        function renderItems() {
+            const list = document.getElementById('items-list');
+            const query = document.getElementById('catalog-search').value.toLowerCase();
+            list.innerHTML = '';
+            PRODUCT_DATABASE.filter(p => p.names[currentLang].toLowerCase().includes(query)).forEach(p => {
+                const prices = p.prices[currentStore];
+                list.innerHTML += `
+                    <div class="item-card">
+                        <div class="item-header">${p.icon} ${p.names[currentLang]}</div>
+                        <div class="price-grid">
+                            <div class="price-col">
+                                <div class="label-country">${TRANSLATIONS[currentLang].country_lt}</div>
+                                <div class="price-tag">${prices.lt.toFixed(2)}€</div>
+                            </div>
+                            <div class="price-col">
+                                <div class="label-country">${TRANSLATIONS[currentLang].country_lv}</div>
+                                <div class="price-tag">${prices.lv.toFixed(2)}€</div>
+                            </div>
+                            <div class="price-col">
+                                <div class="label-country">${TRANSLATIONS[currentLang].country_ee}</div>
+                                <div class="price-tag">${prices.ee.toFixed(2)}€</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        window.onload = () => {
+            if(sessionStorage.getItem('is_logged') === 'true') showView('view-main');
+            changeLanguage('EN');
+        };
+    </script>
+</body>
+</html>
+
